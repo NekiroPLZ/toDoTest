@@ -18,8 +18,7 @@ export class ProjectsController {
   getProjectAndTaskById = async(req,res)=>{
     try {
         const {id} = req.params;
-        const getQuery = await 
-
+        const getQuery = await this.projectsService.getProjectAndTaskById(id);
         res.status(200).json(getQuery)
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -38,11 +37,10 @@ export class ProjectsController {
 
   getByIdProjects = async (req, res) => {
     try {
-      const numberId = req.params.id;
-      const getById = await Project.findByPk(numberId);
-
+      const {id} = req.params;
+      const getById = await this.projectsService.getByIdProjects(id) 
       if (getById === null || getById === "") {
-        res.status(404).json();
+       return res.status(404).json();
       }
       res.status(200).json({ getById });
     } catch (error) {
@@ -51,28 +49,21 @@ export class ProjectsController {
   };
 
   updateByIdProject = async (req, res) => {
+    const {id} = req.params;
+    const {name,priority, description} = req.body;
     try {
-      const {id} = req.params;
-      const {name,priority, description} = req.body;
-      const project = await Project.findByPk(id);
-        project.name = name;
-        project.priority = priority;
-        project.description = description;
-        await project.save();
+      const project = await this.projectsService.updateByIdProject(id,name,priority,description)
         res.status(200).json(project);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   };
+  
 
-  deleteByIdProjects = async (req, res) => {
+  deleteByIdProject = async (req, res) => {
     try {
-      const numberId = req.params.id;
-      const deleteById = await Project.destroy({
-        where: {
-          id: numberId,
-        },
-      });
+      const {id} = req.params;
+      const deleteById = await this.projectsService.deleteByIdProject(id);
       res.status(204).json({ message: "project was deleted", deleteById });
     } catch (error) {
       res.status(500).json({ message: error.message });

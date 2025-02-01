@@ -5,13 +5,24 @@ import { Project } from "../models/Project.js";
 export const projectRouter = () => {
   const projectRouterInstance = Router();
   const projectsServices = new projectService(Project);
-    const projectsController = new ProjectsController(projectsServices);
+  const projectsController = new ProjectsController(projectsServices);
   projectRouterInstance.get("/projects", projectsController.getAllProjects);
-  projectRouterInstance.get("/projects/:id", projectsController.getByIdProjects);
-  projectRouterInstance.post("/projects",projectsController.createProject);
-  projectRouterInstance.put("/projects/:id",projectsController.updateByIdProject);
-  projectRouterInstance.delete("/projects/:id", projectsController.deleteByIdProjects);
-  projectRouterInstance.get('/projects/:id/tasks', projectsController.getProjectAndTaskById)
+  projectRouterInstance.get(
+    "/projects/:id",
+    projectsController.getByIdProjects
+  );
+  projectRouterInstance.post("/projects", projectsController.createProject);
+  projectRouterInstance.put(
+    "/projects/:id",
+    projectsController.updateByIdProject
+  );
+  projectRouterInstance.delete(
+    "/projects/:id",
+    projectsController.deleteByIdProject
+  );
+  projectRouterInstance.get(
+    "/projects/:id/tasks",
+    projectsController.getProjectAndTaskById
+  );
   return projectRouterInstance;
 };
- 
