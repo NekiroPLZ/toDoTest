@@ -1,5 +1,3 @@
-import { Project } from "../models/Project.js";
-import { Taskss } from "../models/Task.js";
 export class ProjectsController {
   constructor(projectsService) {
     this.projectsService = projectsService;
@@ -7,7 +5,11 @@ export class ProjectsController {
   createProject = async (req, res) => {
     try {
       const { name, priority, description } = req.body;
-      const newProject = await this.projectsService.createProject({ name, priority, description });
+      const newProject = await this.projectsService.createProject({
+        name,
+        priority,
+        description,
+      });
 
       res.status(201).json({ message: "project created", project: newProject });
     } catch (error) {
@@ -15,20 +17,19 @@ export class ProjectsController {
     }
   };
 
-  getProjectAndTaskById = async(req,res)=>{
+  getProjectAndTaskById = async (req, res) => {
     try {
-        const {id} = req.params;
-        const getQuery = await this.projectsService.getProjectAndTaskById(id);
-        res.status(200).json(getQuery)
+      const { id } = req.params;
+      const getQuery = await this.projectsService.getProjectAndTaskById(id);
+      res.status(200).json(getQuery);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  }
-
+  };
 
   getAllProjects = async (req, res) => {
     try {
-      const getProjects = await this.projectsService.getAllProjects()
+      const getProjects = await this.projectsService.getAllProjects();
       res.status(200).json({ message: "here you go", getProjects });
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -37,10 +38,10 @@ export class ProjectsController {
 
   getByIdProjects = async (req, res) => {
     try {
-      const {id} = req.params;
-      const getById = await this.projectsService.getByIdProjects(id) 
+      const { id } = req.params;
+      const getById = await this.projectsService.getByIdProjects(id);
       if (getById === null || getById === "") {
-       return res.status(404).json();
+        return res.status(404).json();
       }
       res.status(200).json({ getById });
     } catch (error) {
@@ -49,20 +50,24 @@ export class ProjectsController {
   };
 
   updateByIdProject = async (req, res) => {
-    const {id} = req.params;
-    const {name,priority, description} = req.body;
+    const { id } = req.params;
+    const { name, priority, description } = req.body;
     try {
-      const project = await this.projectsService.updateByIdProject(id,name,priority,description)
-        res.status(200).json(project);
+      const project = await this.projectsService.updateByIdProject(
+        id,
+        name,
+        priority,
+        description
+      );
+      res.status(200).json(project);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   };
-  
 
   deleteByIdProject = async (req, res) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const deleteById = await this.projectsService.deleteByIdProject(id);
       res.status(204).json({ message: "project was deleted", deleteById });
     } catch (error) {

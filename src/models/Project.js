@@ -1,3 +1,5 @@
+import { User } from "./User.js";
+import { UserProject } from "./UserProjects.js";
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
 import { Taskss } from "./Task.js";
@@ -20,12 +22,12 @@ export const Project = sequelize.define("projects", {
   },
 });
 
-Project.hasMany(Taskss,{
-  foreignKey: 'projectId',
-  sourceKey: 'id'
-})
+Project.hasMany(Taskss, {
+  foreignKey: "projectId",
+  sourceKey: "id",
+});
 
-Taskss.belongsTo(Project,{
-  foreignKey: 'projectId',
-  targetKey: 'id'
-})
+Taskss.belongsTo(Project, {
+  foreignKey: "projectId",
+  targetKey: "id",
+});

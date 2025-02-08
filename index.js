@@ -1,12 +1,12 @@
 import app from "./src/app.js";
 import { PORT } from "./src/app.js";
-import { sequelize } from "./src/database/database.js";
 import cors from 'cors';
+import './src/models/Associations.js';
+import './src/config/config.js';
+// Resto de tu código para iniciar la aplicación
 const main = async () => {
   try {
     app.use(cors());
-    // await sequelize.authenticate();
-    // await sequelize.sync();
     app.listen(PORT, () => {
       console.log(`server running in: ${PORT}`);
     });

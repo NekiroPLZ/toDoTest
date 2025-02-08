@@ -1,14 +1,18 @@
 import { Taskss } from "../models/Task.js";
 
 export class tasksController {
-  constructor(taskModel) {
-    this.taskModel = taskModel;
+  constructor(taskServices) {
+    this.taskServices = taskServices;
   }
 
   createTask = async (req, res) => {
     try {
       const { name, status, projectId } = req.body;
-      const newTask = await Taskss.create({ name, status, projectId });
+      const newTask = await this.taskServices.createTask({
+        name,
+        status,
+        projectId,
+      });
       res.status(201).json(newTask);
     } catch (error) {
       res.status(500).json({ message: error });
@@ -17,7 +21,7 @@ export class tasksController {
 
   getAllTasks = async (req, res) => {
     try {
-      const allTasks = await Taskss.findAll();
+      const allTasks = await this.taskServices.getAllTasks();
       res.status(200).json(allTasks);
     } catch (error) {
       res.status(500).json({ message: error });
@@ -26,7 +30,7 @@ export class tasksController {
   getTaskById = async (req, res) => {
     try {
       const { id } = req.params;
-      const taskById = await Taskss.findByPk(id);
+      const taskById = await this.taskServices.getTaskById(id);
       res.status(200).json(taskById);
     } catch (error) {
       res.status(500).json(error);
@@ -36,9 +40,7 @@ export class tasksController {
   deleteTask = async (req, res) => {
     try {
       const { id } = req.params;
-      const taskDeleteById = await Taskss.destroy({
-        where: { id },
-      });
+      const taskDeleteById = await this.taskServices.deleteTask(id);
       res.status(204).json(taskDeleteById);
     } catch (error) {
       res.status(500).json(error);
@@ -49,31 +51,15 @@ export class tasksController {
     try {
       const { id } = req.params;
       const { name, status, projectId } = req.body;
-      const allowedFields = ["name", "status", "projectId"];
-      const receivedFields = Object.keys(req.body);
-      const invalidFields = receivedFields.filter(
-        (field) => !allowedFields.includes(field)
-      );
-      if (invalidFields.length > 0) {
-        return res
-          .status(400)
-          .json({ message: `Invalid fields: ${invalidFields.join(", ")}` });
-      }
-      if ((name || status) == "") {
-        return res.status(400).json({ message: "no rey" });
-      }
-
-      const taskInformation = await Taskss.findByPk(id);
-      const updateTask = {
-        ...taskInformation,
+      const taskData = await this.taskServices.updateTask(
+        id,
         name,
         status,
-        projectId,
-      };
-      await taskInformation.update(updateTask);
-      res.status(200).json(taskInformation);
+        projectId
+      );
+      res.status(200).json(taskData);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({ message: error.message });
     }
   };
 }
